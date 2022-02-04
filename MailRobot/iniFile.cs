@@ -15,8 +15,8 @@ namespace Common
     {
         private const string _defaultFileName = "Config.ini";   // Имя файла конфигурации по умолчанию
         private string _fileName = "";                          // Имя файла конфигурации с полным путем
-        private string _encryptionKey = "g360Vdoug0Dl8d71";     // Ключ шифрования паролей
-        private string _encryptionIV = "jHP0o90czCkRpM3Z";      // Вектор инициализации шифрования паролей
+        private string _encryptionKey = "0123456789";           // Ключ шифрования паролей
+        private string _encryptionIV = "ABCDEFGHIJKLMNOP";      // Вектор инициализации шифрования паролей
 
 //===============================================================================================================
 // Name...........:	IniFile
