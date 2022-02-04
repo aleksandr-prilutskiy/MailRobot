@@ -69,7 +69,7 @@ namespace MailRobot
         } // Main(string[])
 
         /// <summary>
-        /// 
+        /// Загрузка настроек программы из ini-файла
         /// </summary>
         static void LoadIniFile()
         {
@@ -84,9 +84,9 @@ namespace MailRobot
         } // LoadIniFile()
 
         /// <summary>
-        /// 
+        /// Подключение к серверу электронной почты
         /// </summary>
-        /// <param name="pop3"></param>
+        /// <param name="pop3">Объект-почтовый клиент</param>
         /// <returns></returns>
         static bool ConnectToMail(OpenPop.Pop3.Pop3Client pop3)
         {
@@ -104,7 +104,7 @@ namespace MailRobot
         } // ConnectToMail(OpenPop.Pop3.Pop3Client)
 
         /// <summary>
-        /// 
+        /// Подготовка каталога временного размещения файлов сообщений
         /// </summary>
         /// <param name="dir"></param>
         static void PrepareDir(string dir)
