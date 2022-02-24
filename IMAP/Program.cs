@@ -1,66 +1,136 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GemBox.Email;
-using GemBox.Email.Imap;
+using MailKit;
+using MailKit.Net;
 
 namespace IMAP
 {
     class Program
     {
-        private const string _iniFileName = "MailRobot.ini";    // Имя файла настроек сервиса
-        static string SaveDir = System.IO.Directory.GetCurrentDirectory() + "\\mail";
+        private const string _iniFileName = "mail.ini";
         static string ServerAddr = "";
         static string ServerUser = "";
         static string ServerPassword = "";
-        public static Common.IniFile IniFile;                   // Объект для работы с файлом конфигурации программы
+        public static Common.IniFile IniFile;
 
         static void Main(string[] args)
         {
+            if (args.Length < 1)
+            {
+                Console.WriteLine("use: imap <command>");
+                Console.WriteLine("commands:");
+                Console.WriteLine(" folders");
+                Console.WriteLine(" messages <folder>");
+                Console.WriteLine(" move <ForReplyId> <folder from> <folder to>");
+                return;
+            }
+            switch (args[0].ToLower())
+            {
+                case "folders":
+                    Folders(args);
+                    break;
+                case "messages":
+                    Messages(args);
+                    break;
+                case "move":
+                    Move(args);
+                    break;
+            }
+            //Console.ReadLine();
+        }
+        
+        static void Folders(string[] args)
+        {
             LoadIniFile();
-            ComponentInfo.SetLicense("FREE-LIMITED-KEY");
             Console.WriteLine(ServerUser);
             try
             {
-                ImapClient imap = new ImapClient(ServerAddr);
-                imap.ConnectTimeout = TimeSpan.FromSeconds(4);
-                imap.Connect();
+                Console.WriteLine("Connect to: " + ServerAddr);
+                var client = new MailKit.Net.Imap.ImapClient();
+                client.Connect(ServerAddr);
                 Console.WriteLine("Connected.");
-                imap.Authenticate(ServerUser, ServerPassword);
+                client.Authenticate(ServerUser, ServerPassword);
                 Console.WriteLine("Authenticated.");
-
-                Console.WriteLine("Folders:");
-                imap.SelectFolder("Inbox", false);
-                var folders = imap.ListFolders();
-                foreach (var folder in folders)
+                Console.WriteLine("Mail folders:");
+                foreach (var folder in client.GetFolders(client.PersonalNamespaces[0]))
                 {
-                    ImapFolderStatus status = imap.GetFolderStatus(folder.Name);
-                    Console.WriteLine(folder.Name + " > " + status.IsReadOnly + " / " + status.PermanentFlags.Count);
+                    Console.WriteLine(">" + folder);
                 }
-
-                imap.SelectFolder("INBOX.Robot", false);
-                var messages = imap.ListMessages();
-                foreach (var id in messages)
-                {
-                    MailMessage message = imap.GetMessage(id.Number);
-                    Console.WriteLine(id.Number + ": From:" + message.From);
-                }
-
-                //if (messages.Count > 0)
-                //{
-                //    imap.MoveMessage(messages[0].Number, "INBOX.Junk");
-                //}
-
-                imap.Disconnect();
+                client.Disconnect(true);
                 Console.WriteLine("OK");
             }
             catch (Exception exeption)
             {
                 Console.WriteLine("Error: " + exeption.Message);
             }
-            Console.ReadLine();
+        }
+
+        static void Messages(string[] args)
+        {
+            if (args.Length < 2) return;
+            string folderName = args[1];
+            LoadIniFile();
+            Console.WriteLine(ServerUser);
+            try
+            {
+                Console.WriteLine("Connect to: " + ServerAddr);
+                var client = new MailKit.Net.Imap.ImapClient();
+                client.Connect(ServerAddr);
+                Console.WriteLine("Connected.");
+                client.Authenticate(ServerUser, ServerPassword);
+                Console.WriteLine("Authenticated.");
+                Console.WriteLine("Messages in folder: '" + folderName + "'");
+                IMailFolder folder = client.GetFolder(folderName);
+                folder.Open(FolderAccess.ReadWrite);
+                for (int i = 0; i < folder.Count; i++)
+                {
+                    MimeKit.MimeMessage message = folder.GetMessage(i);
+                    Console.WriteLine("#" + i.ToString() + ": " + message.From);
+                }
+                client.Disconnect(true);
+                Console.WriteLine("OK");
+            }
+            catch (Exception exeption)
+            {
+                Console.WriteLine("Error: " + exeption.Message);
+            }
+        }
+
+        static void Move(string[] args)
+        {
+            if (args.Length < 4) return;
+            string id = args[1];
+            string folderFrom = args[2];
+            string folderTo = args[3];
+            LoadIniFile();
+            Console.WriteLine(ServerUser);
+            try
+            {
+                Console.WriteLine("Connect to: " + ServerAddr);
+                var client = new MailKit.Net.Imap.ImapClient();
+                client.Connect(ServerAddr);
+                Console.WriteLine("Connected.");
+                client.Authenticate(ServerUser, ServerPassword);
+                Console.WriteLine("Authenticated.");
+                Console.WriteLine("Messages in folder: '" + folderFrom + "'");
+                IMailFolder folder = client.GetFolder(folderFrom);
+                IMailFolder folder2 = client.GetFolder(folderTo);
+                folder.Open(FolderAccess.ReadWrite);
+                for (int i = 0; i < folder.Count; i++)
+                {
+                    MimeKit.MimeMessage message = folder.GetMessage(i);
+                    if (message.MessageId == id)
+                    {
+                        folder.MoveTo(i, folder2);
+                        Console.WriteLine("Move to: '" + folderTo + "'");
+                    }
+                }
+                client.Disconnect(true);
+                Console.WriteLine("OK");
+            }
+            catch (Exception exeption)
+            {
+                Console.WriteLine("Error: " + exeption.Message);
+            }
         }
 
         static void LoadIniFile()
