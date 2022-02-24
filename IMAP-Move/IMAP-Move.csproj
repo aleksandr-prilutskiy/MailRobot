@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4F220A1F-6F84-4A12-AD17-D839EDF8F8E3}</ProjectGuid>
+    <ProjectGuid>{C47309B6-DAEE-41A9-8661-45E2559759F1}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>MailRobot</RootNamespace>
-    <AssemblyName>MailRobot</AssemblyName>
+    <RootNamespace>IMAP</RootNamespace>
+    <AssemblyName>imap</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,18 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Google-Noto-Emoji-Smileys-10103-robot-face.ico</ApplicationIcon>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenPop, Version=2.0.6.1120, Culture=neutral, PublicKeyToken=6bdb97f144b7efc8, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenPop.NET.2.0.6.1120\lib\net40\OpenPop.dll</HintPath>
+    <Reference Include="GemBox.Email, Version=15.0.0.1116, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
+      <HintPath>..\packages\GemBox.Email.15.0.1116\lib\net35\GemBox.Email.dll</HintPath>
     </Reference>
     <Reference Include="Rebex.Common, Version=6.0.8060.0, Culture=neutral, PublicKeyToken=1c4638788972655d, processorArchitecture=MSIL">
       <HintPath>..\packages\Rebex.Common.6.0.8060\lib\net46\Rebex.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Rebex.Imap, Version=6.0.8060.0, Culture=neutral, PublicKeyToken=1c4638788972655d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rebex.Imap.6.0.8060\lib\net46\Rebex.Imap.dll</HintPath>
     </Reference>
     <Reference Include="Rebex.Mail, Version=6.0.8060.0, Culture=neutral, PublicKeyToken=1c4638788972655d, processorArchitecture=MSIL">
       <HintPath>..\packages\Rebex.Mail.6.0.8060\lib\net46\Rebex.Mail.dll</HintPath>
@@ -59,6 +53,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="iniFile.cs" />
@@ -68,9 +63,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Google-Noto-Emoji-Smileys-10103-robot-face.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

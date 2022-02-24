@@ -35,9 +35,9 @@ namespace MailRobot
             for (int i = 1; i <= n; i++)
             {
                 OpenPop.Mime.Message message = pop3.GetMessage(i);
-                if (Filters.Contains("today"))
-                    if ((DateTime.Today - message.Headers.DateSent).Days > 0)
-                        continue;
+                //if (Filters.Contains("today"))
+                //    if ((DateTime.Today - message.Headers.DateSent).Days > 0)
+                //        continue;
                 CleanDir(SaveDir);
                 Console.WriteLine("Message: #" + i);
                 Console.WriteLine("From: " + message.Headers.From);
